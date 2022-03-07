@@ -1,2 +1,3 @@
 # cache-brain
-An auto-caching npm package for super-fast retrieval of less-consistant data
+
+An auto-caching npm package for super-fast retrieval of data that doesn't have to be consistant.

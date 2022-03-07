@@ -1,0 +1,9 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    expose:
+      - 6379
+# docker-compose -f "src\miscellaneous\docker-compose.yml" up -d --build

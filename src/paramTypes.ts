@@ -8,4 +8,5 @@ export type RedisDataType = {
 export type CBOptions = {
   silent: boolean;
   prettify: boolean;
+  expire: number;
 };

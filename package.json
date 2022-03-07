@@ -6,6 +6,7 @@
   "scripts": {
     "start": "tsc && npm run serve",
     "serve": "node lib/index.js",
+    "example": "tsc -p . && node lib/example/example.js",
     "build-ts": "tsc"
   },
   "repository": {
