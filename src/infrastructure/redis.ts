@@ -13,6 +13,10 @@ export class Redis {
     this.client.on('error', (err) => logger.log(`Redis Client Error: , ${err.message}`));
   }
 
+  static async quit() {
+    await this.client.quit();
+  }
+
   /**
    * getKey - gets a value from redis by a given key.
    * @param key - the key to get.

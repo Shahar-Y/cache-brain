@@ -1,5 +1,5 @@
 {
-  "name": "cache-brain",
+  "name": "try-cache",
   "description": "An auto-caching npm package for super-fast retrieval of less-consistant data",
   "version": "1.0.0",
   "main": "index.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shahar-Y/cache-brain.git"
+    "url": "git+https://github.com/Shahar-Y/try-cache.git"
   },
   "keywords": [
     "redis",
@@ -24,9 +24,9 @@
   "author": "Shahar-Y",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Shahar-Y/cache-brain/issues"
+    "url": "https://github.com/Shahar-Y/try-cache/issues"
   },
-  "homepage": "https://github.com/Shahar-Y/cache-brain#readme",
+  "homepage": "https://github.com/Shahar-Y/try-cache#readme",
   "dependencies": {
     "redis": "^4.0.4"
   },
