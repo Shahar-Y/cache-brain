@@ -1,13 +1,15 @@
 {
   "name": "try-cache",
   "description": "An auto-caching npm package for super-fast retrieval of less-consistant data",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "tsc && npm run serve",
-    "serve": "node lib/index.js",
-    "example": "tsc -p . && node lib/example/example.js",
-    "build-ts": "tsc"
+    "serve": "node dist/index.js",
+    "example": "tsc -p . && node dist/example/example.js",
+    "build": "tsc",
+    "prepublish": "tsc"
   },
   "repository": {
     "type": "git",
