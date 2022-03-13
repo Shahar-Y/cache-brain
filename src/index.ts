@@ -1,4 +1,4 @@
-import { TCOptions, RedisDataType, OperationOptions } from './paramTypes';
+import { TCOptions, OperationOptions } from './paramTypes';
 import { Redis } from './infrastructure/redis';
 import Logger, { criticalLog } from './utils/logger';
 import { defaults } from './defaults';
@@ -7,10 +7,10 @@ export let logger: Logger;
 
 export class TryCache {
   options: TCOptions;
-  redisData: RedisDataType;
+  redisConnectionString: string;
 
-  constructor(redisData: RedisDataType, opts?: Partial<TCOptions>) {
-    this.redisData = redisData;
+  constructor(redisConnectionString: string, opts?: Partial<TCOptions>) {
+    this.redisConnectionString = redisConnectionString;
     this.options = { ...defaults.defaultTCOptions, ...opts };
   }
 
@@ -23,7 +23,7 @@ export class TryCache {
     logger = new Logger(this.options);
 
     // Init redis connection
-    Redis.connect(this.redisData);
+    Redis.connect(this.redisConnectionString);
 
     logger.log('successful connection to redis');
   }

@@ -3,7 +3,7 @@ import { defaults } from '../defaults';
 import { TryCache } from '../index';
 
 (async () => {
-  const cb = new TryCache(defaults.redis, { silent: false, expire: 20 });
+  const cb = new TryCache(defaults.redisConnectionString, { silent: false, expire: 20 });
   cb.initTryCache();
 
   const waitMs = 2000;

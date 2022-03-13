@@ -1,12 +1,13 @@
 import * as redis from 'redis';
-import { RedisDataType } from '../paramTypes';
 import { logger } from '../index';
 
 export class Redis {
   static client: redis.RedisClientType;
 
-  static async connect(redisData: RedisDataType) {
-    this.client = redis.createClient(redisData);
+  static async connect(redisConnectionString: string) {
+    this.client = redis.createClient({
+      url: redisConnectionString,
+    });
 
     await this.client.connect();
 
