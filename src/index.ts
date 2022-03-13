@@ -1,4 +1,4 @@
-import { CBOptions, RedisDataType } from './paramTypes';
+import { TCOptions, RedisDataType, OperationOptions } from './paramTypes';
 import { Redis } from './infrastructure/redis';
 import Logger, { criticalLog } from './utils/logger';
 import { defaults } from './defaults';
@@ -6,12 +6,12 @@ import { defaults } from './defaults';
 export let logger: Logger;
 
 export class TryCache {
-  options: CBOptions;
+  options: TCOptions;
   redisData: RedisDataType;
 
-  constructor(redisData: RedisDataType, opts?: Partial<CBOptions>) {
+  constructor(redisData: RedisDataType, opts?: Partial<TCOptions>) {
     this.redisData = redisData;
-    this.options = { ...defaults.defaultOptions, ...opts };
+    this.options = { ...defaults.defaultTCOptions, ...opts };
   }
 
   /**
@@ -67,24 +67,27 @@ export class TryCache {
    * If it succeeds it will return the cached value, and update the cache in the background.
    * @param key - the key to get.
    * @param retrieveFunction - the function to call if the key is not found in cache. <() => func(...params)>.
-   * @param expire - the expiration time in seconds.
-   * @param callbackFunction - the function to call if the retrieveFunction throws an error after cache failed.
-   * Defaults to empty function.
+   * @param opts - the options to use: { expire: number, callbackFunction: Function }.
    * @returns the requested cache value, or the result of the retrieveFunction
    * if no cache value is found.
    */
   async tryCache(
     key: string,
     retrieveFunction: Function,
-    expire = this.options.expire,
-    callbackFunction = () => {}
+    opts?: Partial<OperationOptions>
   ): Promise<any> {
+    const operationOpts: OperationOptions = {
+      expire: opts?.expire ? opts.expire : this.options.expire,
+      callbackFunction: opts?.callbackFunction
+        ? opts.callbackFunction
+        : defaults.defaultCallbackFunction,
+    };
     try {
       const cachedValue = await this.safeGetFromCache(key);
       // If no value found, retrieve from DB and set
       if (!cachedValue) {
         const result = await retrieveFunction();
-        await this.safeSetCache(key, result, expire);
+        await this.safeSetCache(key, result, operationOpts.expire);
         return result;
       }
 
@@ -92,11 +95,11 @@ export class TryCache {
       retrieveFunction()
         .then(async (result: string) => {
           logger.log('Cached value found. Updating cache');
-          await this.safeSetCache(key, result, expire);
+          await this.safeSetCache(key, result, operationOpts.expire);
         })
         .catch((err: Error) => {
           criticalLog(err);
-          callbackFunction();
+          operationOpts.callbackFunction();
           throw err;
         });
 

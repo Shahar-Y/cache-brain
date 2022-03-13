@@ -1,7 +1,7 @@
-import { CBOptions } from './paramTypes';
+import { TCOptions } from './paramTypes';
 
 // Default variables
-const defaultOptions: CBOptions = { silent: true, prettify: true, expire: 5 * 60 };
+const defaultTCOptions: TCOptions = { silent: true, prettify: true, expire: 5 * 60 };
 
 export const defaults = {
   redis: {
@@ -10,5 +10,6 @@ export const defaults = {
     dbIndex: 0,
     password: '',
   },
-  defaultOptions: defaultOptions,
+  defaultTCOptions: defaultTCOptions,
+  defaultCallbackFunction: () => {},
 };

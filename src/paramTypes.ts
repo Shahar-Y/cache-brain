@@ -5,8 +5,17 @@ export type RedisDataType = {
   dbIndex: number;
 };
 
-export type CBOptions = {
+export type TCOptions = {
   silent: boolean;
   prettify: boolean;
   expire: number;
+};
+
+/**
+ * expire - the expiration time in seconds.
+ * callbackFunction - the function to call if the retrieveFunction throws an error after cache failed.
+ */
+export type OperationOptions = {
+  expire: number;
+  callbackFunction: Function;
 };

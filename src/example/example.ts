@@ -9,33 +9,31 @@ import { TryCache } from '../index';
   const myKey = 'myKey';
 
   console.log('Retrieving data for the first time');
-  const startNoCache = new Date();
+  console.time('1st run time taken');
   const res1 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
-  const endNoCache = new Date();
-  console.log(`First time result: ${res1}, in: ${endNoCache.getTime() - startNoCache.getTime()}ms`);
+  console.log(`First time result: ${res1}`);
+  console.timeEnd('1st run time taken');
 
   console.log('************************************************************************');
 
   console.log('Starting second time, after results are cached');
   await sleep(5000);
-  const startAfterCache = new Date();
+  console.time('2nd run time taken');
   const res2 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
-  const endAfterCache = new Date();
-  console.log(
-    `Second time result: ${res2}, in: ${endAfterCache.getTime() - startAfterCache.getTime()}ms`
-  );
+  console.log(`Second time result: ${res2}`);
+  console.timeEnd('2nd run time taken');
 
   console.log('************************************************************************');
 
   console.log('Starting third time, function should fail!');
   await sleep(5000);
-  const startError = new Date();
+  console.time('3rd run time taken');
 
-  // catch the unhandled rejection in client
+  // Catch the unhandled rejection in client
   process.on('unhandledRejection', (err) => {
     console.log(`Caught the error successfully!: ${err}`);
-    const endError = new Date();
-    console.log(`Caught 3rd run error in: ${endError.getTime() - startError.getTime()}ms`);
+    console.timeEnd('3rd run time taken');
+    console.log(`Caught 3rd run error`);
   });
 
   // Call the function that should fail asunchronously
@@ -43,14 +41,15 @@ import { TryCache } from '../index';
 
   console.log('************************************************************************');
 
-  // console.log('Starting 4th time, after results are cached');
-  // await sleep(5000);
-  // const startAfterCache = new Date();
-  // const res2 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
-  // const endAfterCache = new Date();
-  // console.log(
-  //   `Second time result: ${res2}, in: ${endAfterCache.getTime() - startAfterCache.getTime()}ms`
-  // );
+  console.log('Starting 4th time, after results are cached');
+  await sleep(5000);
+  console.time('4th run time taken');
+  const res4 = await cb.tryCache(myKey, () => dummyDB(2, 7, true), {
+    expire: 30,
+    callbackFunction: () => console.log('Callback function called'),
+  });
+  console.timeEnd('4th run time taken');
+  console.log(`Fourth time result: ${res4}`);
 })();
 
 // simulate a database call

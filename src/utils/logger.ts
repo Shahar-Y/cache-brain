@@ -1,15 +1,15 @@
-import { CBOptions } from '../paramTypes';
+import { TCOptions } from '../paramTypes';
 
-export const prefixLog: String = 'REDBIT ===> ';
+export const prefixLog: String = 'TryCache ===> ';
 
 export function criticalLog(message: any): void {
   console.error(prefixLog, message);
 }
 
 export default class Logger {
-  options: CBOptions;
+  options: TCOptions;
 
-  constructor(options: CBOptions) {
+  constructor(options: TCOptions) {
     this.options = options;
   }
 
