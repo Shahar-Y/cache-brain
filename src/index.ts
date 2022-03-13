@@ -94,7 +94,6 @@ export class TryCache {
       // If value found, update the cache in background and return the cached value.
       retrieveFunction()
         .then(async (result: string) => {
-          logger.log('Cached value found. Updating cache');
           await this.safeSetCache(key, result, operationOpts.expire);
         })
         .catch((err: Error) => {

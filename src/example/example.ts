@@ -6,6 +6,7 @@ import { TryCache } from '../index';
   const cb = new TryCache(defaults.redis, { silent: false, expire: 20 });
   cb.initTryCache();
 
+  const waitMs = 2000;
   const myKey = 'myKey';
 
   console.log('Retrieving data for the first time');
@@ -17,7 +18,7 @@ import { TryCache } from '../index';
   console.log('************************************************************************');
 
   console.log('Starting second time, after results are cached');
-  await sleep(5000);
+  await sleep(waitMs);
   console.time('2nd run time taken');
   const res2 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
   console.log(`Second time result: ${res2}`);
@@ -26,7 +27,7 @@ import { TryCache } from '../index';
   console.log('************************************************************************');
 
   console.log('Starting third time, function should fail!');
-  await sleep(5000);
+  await sleep(waitMs);
   console.time('3rd run time taken');
 
   // Catch the unhandled rejection in client
@@ -42,7 +43,7 @@ import { TryCache } from '../index';
   console.log('************************************************************************');
 
   console.log('Starting 4th time, after results are cached');
-  await sleep(5000);
+  await sleep(waitMs);
   console.time('4th run time taken');
   const res4 = await cb.tryCache(myKey, () => dummyDB(2, 7, true), {
     expire: 30,
@@ -65,7 +66,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// todo: read
+// Close gracefully on ctrl+c
 process.on('SIGINT', async () => {
   console.log('Closing gracefully');
   await Redis.quit();
