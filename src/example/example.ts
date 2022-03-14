@@ -4,7 +4,7 @@ import { TryCache } from '../index';
 
 (async () => {
   const cb = new TryCache(defaults.redisConnectionString, { silent: false, expire: 20 });
-  cb.initTryCache();
+  await cb.initTryCache();
 
   const waitMs = 2000;
   const myKey = 'myKey';
@@ -12,7 +12,7 @@ import { TryCache } from '../index';
   console.log('Retrieving data for the first time');
   console.time('1st run time taken');
   const res1 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
-  console.log(`First time result: ${res1}`);
+  console.log('First time result:', res1);
   console.timeEnd('1st run time taken');
 
   console.log('************************************************************************');
@@ -21,7 +21,7 @@ import { TryCache } from '../index';
   await sleep(waitMs);
   console.time('2nd run time taken');
   const res2 = await cb.tryCache(myKey, () => dummyDB(2, 7, false));
-  console.log(`Second time result: ${res2}`);
+  console.log('Second time result:', res2);
   console.timeEnd('2nd run time taken');
 
   console.log('************************************************************************');
@@ -50,7 +50,7 @@ import { TryCache } from '../index';
     callbackFunction: () => console.log('Callback function called'),
   });
   console.timeEnd('4th run time taken');
-  console.log(`Fourth time result: ${res4}`);
+  console.log('Fourth time result:', res4);
 })();
 
 // simulate a database call
@@ -59,7 +59,7 @@ async function dummyDB(x: number, y: number, shouldFail: boolean) {
   if (shouldFail) {
     throw new Error('Failed Successfully');
   }
-  return x + y;
+  return { x, y };
 }
 
 function sleep(ms: number): Promise<void> {

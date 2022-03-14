@@ -22,8 +22,13 @@ export class Redis {
    * getKey - gets a value from redis by a given key.
    * @param key - the key to get.
    */
-  static async getKey(key: string) {
-    return await this.client.get(key);
+  static async getKey(key: string): Promise<string | object | null> {
+    const value: string | null = await this.client.get(key);
+    if (!value) return null;
+
+    const fixedValue: string = value.toString();
+    const parsedValue = JSON.parse(fixedValue);
+    return parsedValue.TCValue;
   }
 
   /**
@@ -32,9 +37,9 @@ export class Redis {
    * @param value - the value to set
    * @param expire - the expire time in seconds
    */
-  static async setKey(key: string, value: string, expire?: number) {
-    logger.log(`Setting ${key} to ${value} with expire ${expire}`);
-    await this.client.set(key, value);
+  static async setKey(key: string, value: string | object, expire?: number) {
+    logger.log(`Setting ${key} with expire ${expire} to`, value);
+    await this.client.set(key, JSON.stringify({ TCValue: value }));
 
     if (expire) {
       await this.client.expire(key, expire);

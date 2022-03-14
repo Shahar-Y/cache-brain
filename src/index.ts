@@ -51,7 +51,7 @@ export class TryCache {
    * @param expire - the expire time in seconds.
    * @returns - null.
    */
-  async safeSetCache(key: string, value: string, expire?: number) {
+  async safeSetCache(key: string, value: string | object, expire?: number) {
     try {
       const res = await Redis.setKey(key, value, expire);
       return res;
