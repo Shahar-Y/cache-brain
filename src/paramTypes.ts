@@ -1,13 +1,5 @@
-export type RedisDataType = {
-  host: string;
-  port: number;
-  password: string;
-  dbIndex: number;
-};
-
 export type TCOptions = {
   silent: boolean;
-  prettify: boolean;
   expire: number;
 };
 

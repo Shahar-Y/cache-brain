@@ -13,7 +13,7 @@ export default class Logger {
     this.options = options;
   }
 
-  log(message: string | object): void {
-    if (!this.options.silent) console.log(prefixLog, message);
+  log(message: string | object, ...args: any): void {
+    if (!this.options.silent) console.log(prefixLog, message, ...args);
   }
 }

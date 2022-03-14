@@ -6,4 +6,11 @@ services:
       - '6379:6379'
     expose:
       - 6379
+
+  try-cache:
+    container_name: try-cache
+    build: .
+    ports:
+      - '3000:3000'
+    restart: always
 # docker-compose -f "src\miscellaneous\docker-compose.yml" up -d --build
