@@ -1,7 +1,7 @@
 {
   "name": "try-cache",
   "description": "An auto-caching npm package for super-fast retrieval of less-consistant data",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,10 +16,13 @@
     "url": "git+https://github.com/Shahar-Y/try-cache.git"
   },
   "keywords": [
-    "redis",
+    "try-cache",
+    "try",
     "cache",
+    "node",
+    "redis",
     "async",
-    "efficiency",
+    "performance",
     "db",
     "database"
   ],
