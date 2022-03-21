@@ -5,7 +5,7 @@
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/try-cache)
 ![npm](https://img.shields.io/npm/dt/try-cache)
 
-An auto-caching npm package for super-fast retrieval of data that doesn't have to be atomicly consistant,
+An auto-caching npm package for super-fast retrieval of data that doesn't have to be atomically consistant,
 allowing automatic cache update and expiration according to the user's needs.
 
 ## Installation
