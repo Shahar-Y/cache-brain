@@ -5,7 +5,7 @@ import { defaults } from './defaults';
 
 export let logger: Logger;
 
-export class TryCache {
+class TryCache {
   options: TCOptions;
   redisConnectionString: string;
 
@@ -109,3 +109,5 @@ export class TryCache {
     }
   }
 }
+
+export { TryCache, TCOptions, OperationOptions };
