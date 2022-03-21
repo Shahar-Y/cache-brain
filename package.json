@@ -16,10 +16,13 @@
     "url": "git+https://github.com/Shahar-Y/try-cache.git"
   },
   "keywords": [
-    "redis",
+    "try-cache",
+    "try",
     "cache",
+    "node",
+    "redis",
     "async",
-    "efficiency",
+    "performance",
     "db",
     "database"
   ],
