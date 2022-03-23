@@ -12,6 +12,37 @@ allowing automatic cache update and expiration according to the user's needs.
 
 `npm i --save try-cache`
 
+## Options
+
+### Initiation options
+
+```
+/**
+ * @param silent - if true, don't log anything to the console. Defaults to false.
+ * @param expire - the default expiration time in seconds. Defaults to 5 mins.
+ */
+export type TCOptions = {
+  silent: boolean;
+  expire: number;
+};
+```
+
+### Operation Options
+
+```
+/**
+ * @param expire - the expiration time in seconds for the specific operation. Default to TCOptions' expire.
+ * @param callbackFunction - the function to call if the retrieveFunction throws an error after cache failed. Defaults to "do nothing".
+ * @param forceDB - if true, will force the retrieveFunction to be called even if the key is found in cache. Defaults to false.
+ */
+export type OperationOptions = {
+  expire: number;
+  callbackFunction: Function;
+  forceDB: boolean;
+};
+
+```
+
 ## Usage Example
 
 ```
