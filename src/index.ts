@@ -67,7 +67,7 @@ class TryCache {
    * If it succeeds it will return the cached value, and update the cache in the background.
    * @param key - the key to get.
    * @param retrieveFunction - the function to call if the key is not found in cache. <() => func(...params)>.
-   * @param opts - the options to use: { expire: number, callbackFunction: Function }.
+   * @param opts - the options to use: { expire: number, callbackFunction: Function, forceDB: boolean }.
    * @returns the requested cache value, or the result of the retrieveFunction
    * if no cache value is found.
    */
@@ -81,10 +81,16 @@ class TryCache {
       callbackFunction: opts?.callbackFunction
         ? opts.callbackFunction
         : defaults.defaultCallbackFunction,
+      forceDB: opts?.forceDB ? opts.forceDB : false,
     };
     try {
-      const cachedValue = await this.safeGetFromCache(key);
-      // If no value found, retrieve from DB and set
+      let cachedValue;
+
+      if (!operationOpts.forceDB) {
+        cachedValue = await this.safeGetFromCache(key);
+      }
+
+      // If no value found or forceDB activated, retrieve from DB and update cache
       if (!cachedValue) {
         const result = await retrieveFunction();
         await this.safeSetCache(key, result, operationOpts.expire);
