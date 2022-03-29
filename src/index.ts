@@ -92,12 +92,14 @@ class TryCache {
 
       // If no value found or forceDB activated, retrieve from DB and update cache
       if (!cachedValue) {
+        logger.log(`Cache miss for ${key}`);
         const result = await retrieveFunction();
         await this.safeSetCache(key, result, operationOpts.expire);
         return result;
       }
 
       // If value found, update the cache in background and return the cached value.
+      logger.log(`Cache hit for ${key}`);
       retrieveFunction()
         .then(async (result: string) => {
           await this.safeSetCache(key, result, operationOpts.expire);
