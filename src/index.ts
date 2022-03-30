@@ -84,6 +84,7 @@ class TryCache {
       forceDB: opts?.forceDB ? opts.forceDB : false,
     };
     try {
+      const startDate = new Date();
       let cachedValue;
 
       if (!operationOpts.forceDB) {
@@ -92,16 +93,20 @@ class TryCache {
 
       // If no value found or forceDB activated, retrieve from DB and update cache
       if (!cachedValue) {
-        logger.log(`Cache miss for ${key}`);
+        logger.log(`Cache MISS for ${key}`);
         const result = await retrieveFunction();
+        logger.log(`After MISS - Setting ${key} with expire ${operationOpts.expire} to`, result);
         await this.safeSetCache(key, result, operationOpts.expire);
+        const endDate = new Date();
+        logger.log(`Cache MISS for ${key} took ${endDate.getTime() - startDate.getTime()} ms`);
         return result;
       }
 
       // If value found, update the cache in background and return the cached value.
-      logger.log(`Cache hit for ${key}`);
+      logger.log(`Cache HIT for ${key}`);
       retrieveFunction()
         .then(async (result: string) => {
+          logger.log(`After HIT - Setting ${key} with expire ${operationOpts.expire} to`, result);
           await this.safeSetCache(key, result, operationOpts.expire);
         })
         .catch((err: Error) => {
@@ -110,6 +115,8 @@ class TryCache {
           throw err;
         });
 
+      const endDate = new Date();
+      logger.log(`Cache HIT for ${key} took ${endDate.getTime() - startDate.getTime()} ms`);
       return cachedValue;
     } catch (err) {
       criticalLog(err);

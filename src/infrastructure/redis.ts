@@ -38,7 +38,6 @@ export class Redis {
    * @param expire - the expire time in seconds
    */
   static async setKey(key: string, value: string | object, expire?: number) {
-    logger.log(`Setting ${key} with expire ${expire} to`, value);
     await this.client.set(key, JSON.stringify({ TCValue: value }));
 
     if (expire) {
