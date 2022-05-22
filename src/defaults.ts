@@ -1,7 +1,7 @@
-import { TCOptions } from './paramTypes';
+import { TCDefaultOptions } from './paramTypes';
 
 // Default variables
-const defaultTCOptions: TCOptions = { silent: true, expire: 5 * 60 };
+const defaultTCOptions: TCDefaultOptions = { silent: true, expire: 5 * 60 };
 
 export const defaults = {
   defaultTCOptions: defaultTCOptions,

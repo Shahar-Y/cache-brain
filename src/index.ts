@@ -1,4 +1,4 @@
-import { TCOptions, OperationOptions } from './paramTypes';
+import { TCDefaultOptions, OperationOptions } from './paramTypes';
 import { Redis } from './infrastructure/redis';
 import Logger, { criticalLog } from './utils/logger';
 import { defaults } from './defaults';
@@ -6,10 +6,10 @@ import { defaults } from './defaults';
 export let logger: Logger;
 
 class TryCache {
-  options: TCOptions;
+  options: TCDefaultOptions;
   redisConnectionString: string;
 
-  constructor(redisConnectionString: string, opts?: Partial<TCOptions>) {
+  constructor(redisConnectionString: string, opts?: Partial<TCDefaultOptions>) {
     this.redisConnectionString = redisConnectionString;
     this.options = { ...defaults.defaultTCOptions, ...opts };
   }
@@ -25,7 +25,7 @@ class TryCache {
     // Init redis connection
     Redis.connect(this.redisConnectionString);
 
-    logger.log('successful connection to redis');
+    logger.log('successful connection to redis', true);
   }
 
   /**
@@ -82,6 +82,7 @@ class TryCache {
         ? opts.callbackFunction
         : defaults.defaultCallbackFunction,
       forceDB: opts?.forceDB ? opts.forceDB : false,
+      forceLog: opts?.forceLog ? opts.forceLog : false,
     };
     try {
       const startDate = new Date();
@@ -93,20 +94,27 @@ class TryCache {
 
       // If no value found or forceDB activated, retrieve from DB and update cache
       if (!cachedValue) {
-        logger.log(`Cache MISS for ${key}`);
+        logger.log(`Cache MISS for ${key}`, operationOpts.forceLog);
         const result = await retrieveFunction();
         logger.log(`After MISS - Setting ${key} with expire ${operationOpts.expire} to`, result);
         await this.safeSetCache(key, result, operationOpts.expire);
         const endDate = new Date();
-        logger.log(`Cache MISS for ${key} took ${endDate.getTime() - startDate.getTime()} ms`);
+        logger.log(
+          `Cache MISS for ${key} took ${endDate.getTime() - startDate.getTime()} ms`,
+          operationOpts.forceLog
+        );
         return result;
       }
 
       // If value found, update the cache in background and return the cached value.
-      logger.log(`Cache HIT for ${key}`);
+      logger.log(`Cache HIT for ${key}`, operationOpts.forceLog);
       retrieveFunction()
         .then(async (result: string) => {
-          logger.log(`After HIT - Setting ${key} with expire ${operationOpts.expire} to`, result);
+          logger.log(
+            `After HIT - Setting ${key} with expire ${operationOpts.expire} to`,
+            operationOpts.forceLog,
+            result
+          );
           await this.safeSetCache(key, result, operationOpts.expire);
         })
         .catch((err: Error) => {
@@ -116,7 +124,10 @@ class TryCache {
         });
 
       const endDate = new Date();
-      logger.log(`Cache HIT for ${key} took ${endDate.getTime() - startDate.getTime()} ms`);
+      logger.log(
+        `Cache HIT for ${key} took ${endDate.getTime() - startDate.getTime()} ms`,
+        operationOpts.forceLog
+      );
       return cachedValue;
     } catch (err) {
       criticalLog(err);
@@ -125,4 +136,4 @@ class TryCache {
   }
 }
 
-export { TryCache, TCOptions, OperationOptions };
+export { TryCache, TCDefaultOptions as TCOptions, OperationOptions };
